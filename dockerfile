@@ -7,6 +7,6 @@ RUN npm install
 COPY . .
 #install dependancies
 
-EXPOSE 3002
+EXPOSE 3003
 
 CMD ["npm", "run", "start"]

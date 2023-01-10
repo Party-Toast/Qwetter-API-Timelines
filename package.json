@@ -10,8 +10,8 @@
     "swagger": "tsoa spec",
     "schema": "node ./src/utils/schemaGenerator.js",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
-    "docker-build": "docker build -t qwetter-api-messages .",
-    "docker-run": "docker run -p 3002:3002 qwetter-api-messages"
+    "docker-build": "docker build -t qwetter-api-timelines .",
+    "docker-run": "docker run -p 3003:3003 qwetter-api-timelines"
   },
   "keywords": [],
   "author": "",
