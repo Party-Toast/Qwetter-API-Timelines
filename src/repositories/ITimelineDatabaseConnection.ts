@@ -1,5 +1,5 @@
 import { Message, MessageCreationRequest, MessageLikeRequest, MessageUndoLikeRequest } from "../models/Message";
-import { Timeline, MessageForMultipleTimelinesRequest} from "../models/Timeline";
+import { Timeline, MessageForMultipleTimelinesRequest, UserUnfollowConsequenceRequest} from "../models/Timeline";
 
 export default interface ITimelineDatabaseConnection {
     createTimeLine(user_uuid: string): Promise<Timeline | undefined>;
@@ -9,6 +9,6 @@ export default interface ITimelineDatabaseConnection {
     addMultipleMessagesToTimeline (user_uuid: string, messages: Array<Message>): Promise<Timeline | undefined>;
     addMessageToMultipleTimelines(message_and_user_uuids: MessageForMultipleTimelinesRequest): Promise<Array<Timeline | undefined>>;
     // TODO: update messages in timeline based on message uuid (in case user/likes changes)
-    removeMessagesFromTimelineByMessageUserUuid (user_uuid: string, message_user_uuid: string): Promise<Timeline | undefined>;
-    removeMessagesFromAllTimelinesByMessageUuid (message_uuid: string): Promise<Timeline | undefined>;
+    removeMessagesFromTimelineByMessageUserUuid (userUnfollowConsequenceRequest: UserUnfollowConsequenceRequest): Promise<Timeline | undefined>;
+    removeMessageFromAllTimelinesByMessageUuid (message_uuid: string): Promise<Timeline | undefined>;
 }

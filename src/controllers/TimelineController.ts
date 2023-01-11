@@ -3,7 +3,7 @@ import { MessageForMultipleTimelinesRequest, Timeline, UserUnfollowConsequenceRe
 import TimelineService from '../services/TimelineService';
 import { Route, Get, Put, Path, Post, Body } from 'tsoa'
 
-@Route("/messages")
+@Route("/timelines")
 export default class TimelineController {
     public timelineService;
 
@@ -58,14 +58,14 @@ export default class TimelineController {
     public async removeMessagesFromTimelineByMessageUserUuid(
         @Body() userUnfollowConsequenceRequest: UserUnfollowConsequenceRequest
     ): Promise<Timeline | undefined> {
-        return await this.timelineService.removeMessagesFromTimelineByMessageUserUuid(userUnfollowConsequenceRequest.user_uuid, userUnfollowConsequenceRequest.message_user_uuid);
+        return await this.timelineService.removeMessagesFromTimelineByMessageUserUuid(userUnfollowConsequenceRequest);
     }
 
     @Put("/remove/:message_uuid") 
-    public async removeMessagesFromAllTimelinesByMessageUuid(
+    public async removeMessageFromAllTimelinesByMessageUuid(
         @Path() message_uuid: string
     ): Promise<Timeline | undefined> {
-        return await this.timelineService.removeMessagesFromAllTimelinesByMessageUuid(message_uuid);
+        return await this.timelineService.removeMessageFromAllTimelinesByMessageUuid(message_uuid);
     }  
 
 }

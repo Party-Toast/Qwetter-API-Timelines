@@ -1,6 +1,6 @@
 import MongoDBTimelineDatabaseConnection from "../repositories/MongoDBTimelineDatabaseConnection";
 import { Message } from "../models/Message";
-import { MessageForMultipleTimelinesRequest, Timeline } from "../models/Timeline";
+import { MessageForMultipleTimelinesRequest, Timeline, UserUnfollowConsequenceRequest } from "../models/Timeline";
 
 export default class TimelineService {
     public databaseConnection;
@@ -35,11 +35,11 @@ export default class TimelineService {
         return this.databaseConnection.addMessageToMultipleTimelines(message_and_user_uuids);
     }
 
-    public removeMessagesFromTimelineByMessageUserUuid = async (user_uuid: string, message_user_uuid: string): Promise<Timeline | undefined> => {
-        return this.databaseConnection.removeMessagesFromTimelineByMessageUserUuid(user_uuid, message_user_uuid);
+    public removeMessagesFromTimelineByMessageUserUuid = async (userUnfollowConsequenceRequest: UserUnfollowConsequenceRequest): Promise<Timeline | undefined> => {
+        return this.databaseConnection.removeMessagesFromTimelineByMessageUserUuid(userUnfollowConsequenceRequest);
     }
 
-    public removeMessagesFromAllTimelinesByMessageUuid = async (message_uuid: string): Promise<Timeline | undefined> => {
-        return this.databaseConnection.removeMessagesFromAllTimelinesByMessageUuid(message_uuid);
+    public removeMessageFromAllTimelinesByMessageUuid = async (message_uuid: string): Promise<Timeline | undefined> => {
+        return this.databaseConnection.removeMessageFromAllTimelinesByMessageUuid(message_uuid);
     }
 }

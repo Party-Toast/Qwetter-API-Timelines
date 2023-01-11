@@ -1,6 +1,6 @@
 import IDatabaseConnection from "./ITimelineDatabaseConnection";
 import { Message, MessageLikeRequest, MessageUndoLikeRequest, MessageCreationRequest } from "../models/Message";
-import { MessageForMultipleTimelinesRequest, Timeline } from "../models/Timeline";
+import { MessageForMultipleTimelinesRequest, Timeline, UserUnfollowConsequenceRequest } from "../models/Timeline";
 import { ObjectId } from "mongodb";
 
 const uri = process.env.MONGODB_URI as string;
@@ -129,7 +129,10 @@ export default class MongoDBTimelineDatabaseConnection implements IDatabaseConne
         });
     }
 
-    public removeMessagesFromTimelineByMessageUserUuid (user_uuid: string, message_user_uuid: string): Promise<Timeline | undefined> {
+    public removeMessagesFromTimelineByMessageUserUuid (userUnfollowConsequenceRequest: UserUnfollowConsequenceRequest): Promise<Timeline | undefined> {
+        const user_uuid = userUnfollowConsequenceRequest.user_uuid;
+        const message_user_uuid = userUnfollowConsequenceRequest.message_user_uuid;
+        
         return new Promise((resolve, reject) => {
             this.collection.findOneAndUpdate(
                 { user_uuid: user_uuid },
@@ -143,10 +146,24 @@ export default class MongoDBTimelineDatabaseConnection implements IDatabaseConne
                 let timeline = this.createTimelineFromResult(result.value);
                 resolve(timeline);
             });
-        });
+        }); 
     }
 
-    public removeMessagesFromAllTimelinesByMessageUuid (message_uuid: string): Promise<Timeline | undefined> {
-        throw new Error("Method not implemented.");
-    }
+    // Loop through all timelines and remove messages from all timelines that have the given message_uuid
+    public removeMessageFromAllTimelinesByMessageUuid (message_uuid: string): Promise<Timeline | undefined> {
+        return new Promise((resolve, reject) => {
+            this.collection.updateMany(
+                {},
+                { $pull: { messages: { uuid: message_uuid } } },
+                { returnDocument: "after" }
+            ).then((result: any) => {
+                if(result.value === null) {
+                    resolve(undefined);
+                    return;
+                }
+                let timeline = this.createTimelineFromResult(result.value);
+                resolve(timeline);
+            });
+        });
+    }  
 }
