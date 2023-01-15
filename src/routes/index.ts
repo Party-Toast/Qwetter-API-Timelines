@@ -77,7 +77,7 @@ router.put(`${PATH}/unfollow`, async (request: Request, response: Response) => {
     const userUnfollowConsequenceRequest: UserUnfollowConsequenceRequest = request.body;
     timelineController.removeMessagesFromTimelineByMessageUserUuid(userUnfollowConsequenceRequest).then(timeline => {
         if(timeline === undefined) {
-            response.status(404).send(`No timeline with user uuid ${userUnfollowConsequenceRequest.user_uuid} was found.`);
+            response.status(404).send(`No timeline with user uuid ${userUnfollowConsequenceRequest.follower_uuid} was found.`);
         }
         response.send(timeline);
     });

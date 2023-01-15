@@ -2,7 +2,7 @@ import TimelineController from '../src/controllers/TimelineController';
 import TimelineService from '../src/services/TimelineService';
 import { expect } from 'chai';
 import Ajv, { JSONSchemaType } from 'ajv';
-import { Message, MessageCreationRequest, MessageLikeRequest, MessageUndoLikeRequest } from '../src/models/Message';
+import { Message } from '../src/models/Message';
 import MessageSchema from '../src/schemas/MessageSchema';
 
 describe('TimelineController', () => { 

@@ -1,4 +1,4 @@
-import { Message, MessageCreationRequest, MessageLikeRequest, MessageUndoLikeRequest } from "../models/Message";
+import { Message } from "../models/Message";
 import { Timeline, MessageForMultipleTimelinesRequest, UserUnfollowConsequenceRequest} from "../models/Timeline";
 
 export default interface ITimelineDatabaseConnection {

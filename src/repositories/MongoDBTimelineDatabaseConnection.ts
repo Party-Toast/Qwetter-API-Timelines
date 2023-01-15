@@ -1,5 +1,5 @@
 import IDatabaseConnection from "./ITimelineDatabaseConnection";
-import { Message, MessageLikeRequest, MessageUndoLikeRequest, MessageCreationRequest } from "../models/Message";
+import { Message } from "../models/Message";
 import { MessageForMultipleTimelinesRequest, Timeline, UserUnfollowConsequenceRequest } from "../models/Timeline";
 import { ObjectId } from "mongodb";
 
@@ -130,8 +130,8 @@ export default class MongoDBTimelineDatabaseConnection implements IDatabaseConne
     }
 
     public removeMessagesFromTimelineByMessageUserUuid (userUnfollowConsequenceRequest: UserUnfollowConsequenceRequest): Promise<Timeline | undefined> {
-        const user_uuid = userUnfollowConsequenceRequest.user_uuid;
-        const message_user_uuid = userUnfollowConsequenceRequest.message_user_uuid;
+        const user_uuid = userUnfollowConsequenceRequest.follower_uuid;
+        const message_user_uuid = userUnfollowConsequenceRequest.followee_uuid;
         
         return new Promise((resolve, reject) => {
             this.collection.findOneAndUpdate(

@@ -1,14 +1,19 @@
 import MongoDBTimelineDatabaseConnection from "../repositories/MongoDBTimelineDatabaseConnection";
 import { Message } from "../models/Message";
 import { MessageForMultipleTimelinesRequest, Timeline, UserUnfollowConsequenceRequest } from "../models/Timeline";
+import CloudAMQPEventBroker from "../broker/CloudAMQPEventBroker";
 
 export default class TimelineService {
-    public databaseConnection;
+    private databaseConnection;
+    private eventBroker;
+
     private DEFAULT_PAGE = 1;
     private DEFAULT_PER_PAGE = 20; 
 
     constructor() {
         this.databaseConnection = new MongoDBTimelineDatabaseConnection();
+        this.eventBroker = new CloudAMQPEventBroker(this.databaseConnection);
+        this.eventBroker.connect();
     }
 
     public createTimeLine = async (user_uuid: string): Promise<Timeline | undefined> => {

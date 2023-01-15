@@ -11,6 +11,6 @@ export interface MessageForMultipleTimelinesRequest {
 }
 
 export interface UserUnfollowConsequenceRequest {
-    user_uuid: string;
-    message_user_uuid: string;
+    follower_uuid: string;
+    followee_uuid: string;
 }
