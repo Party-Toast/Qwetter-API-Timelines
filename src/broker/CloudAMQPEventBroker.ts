@@ -1,5 +1,5 @@
 import client from 'amqplib';
-import { MessageForMultipleTimelinesRequest, UserUnfollowConsequenceRequest } from '../models/Timeline';
+import { MessageForMultipleTimelinesRequest, MultipleMessagesforTimelineRequest, UserUnfollowConsequenceRequest } from '../models/Timeline';
 import { User } from '../models/User';
 
 export default class CloudAMQPEventBroker {
@@ -23,6 +23,7 @@ export default class CloudAMQPEventBroker {
         this.connection = await client.connect(process.env.CLOUDAMQP_URL as string);
         
         this.listenToUsersExchanges();
+        this.listenToMessagesExchanges();
     }
 
     private listenToUsersExchanges = async () => {
@@ -47,12 +48,30 @@ export default class CloudAMQPEventBroker {
             }
         }, {noAck: true});
 
+
+
         await channel.assertQueue('timelines_message-created');
         await channel.bindQueue('timelines_message-created', exchange, 'message.created');
         await channel.consume('timelines_message-created', (msg: any) => {
             if(msg.content) {
                 const messageAndUsers: MessageForMultipleTimelinesRequest = JSON.parse(msg.content);
                 this.databaseConnection.addMessageToMultipleTimelines(messageAndUsers);
+            }
+        }, {noAck: true});
+    }
+
+    private listenToMessagesExchanges = async () => {
+        const exchange = 'messages';
+        const channel = await this.getChannel(exchange);
+
+        await channel.assertQueue('timelines_user-followed');
+        await channel.bindQueue('timelines_user-followed', exchange, 'user.followed');
+        await channel.consume('timelines_user-followed', (msg: any) => {
+            if(msg.content) {
+                const userUuidAndMessages: MultipleMessagesforTimelineRequest = JSON.parse(msg.content);
+                if(userUuidAndMessages.messages) {
+                    this.databaseConnection.addMultipleMessagesToTimeline(userUuidAndMessages);
+                }
             }
         }, {noAck: true});
     }

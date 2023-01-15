@@ -1,6 +1,6 @@
 import IDatabaseConnection from "./ITimelineDatabaseConnection";
 import { Message } from "../models/Message";
-import { MessageForMultipleTimelinesRequest, Timeline, UserUnfollowConsequenceRequest } from "../models/Timeline";
+import { MessageForMultipleTimelinesRequest, MultipleMessagesforTimelineRequest, Timeline, UserUnfollowConsequenceRequest } from "../models/Timeline";
 import { ObjectId } from "mongodb";
 
 const uri = process.env.MONGODB_URI as string;
@@ -100,11 +100,11 @@ export default class MongoDBTimelineDatabaseConnection implements IDatabaseConne
         });
     }
 
-    public addMultipleMessagesToTimeline (user_uuid: string, messages: Array<Message>): Promise<Timeline | undefined> {
+    public addMultipleMessagesToTimeline (userUuidAndMessages: MultipleMessagesforTimelineRequest): Promise<Timeline | undefined> {
         return new Promise((resolve, reject) => {
             this.collection.findOneAndUpdate(
-                { user_uuid: user_uuid },
-                { $push: { messages: { $each: messages } } },
+                { user_uuid: userUuidAndMessages.user_uuid },
+                { $push: { messages: { $each: userUuidAndMessages.messages } } },
                 { returnDocument: "after" }
             ).then((result: any) => {
                 if(result.value === null) {

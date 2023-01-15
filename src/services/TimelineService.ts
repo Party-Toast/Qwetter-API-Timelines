@@ -1,6 +1,6 @@
 import MongoDBTimelineDatabaseConnection from "../repositories/MongoDBTimelineDatabaseConnection";
 import { Message } from "../models/Message";
-import { MessageForMultipleTimelinesRequest, Timeline, UserUnfollowConsequenceRequest } from "../models/Timeline";
+import { MessageForMultipleTimelinesRequest, MultipleMessagesforTimelineRequest, Timeline, UserUnfollowConsequenceRequest } from "../models/Timeline";
 import CloudAMQPEventBroker from "../broker/CloudAMQPEventBroker";
 
 export default class TimelineService {
@@ -32,8 +32,8 @@ export default class TimelineService {
         return this.databaseConnection.addMessageToTimeline(user_uuid, message);
     }
 
-    public addMultipleMessagesToTimeline = async (user_uuid: string, messages: Array<Message>): Promise<Timeline | undefined> => {
-        return this.databaseConnection.addMultipleMessagesToTimeline(user_uuid, messages);
+    public addMultipleMessagesToTimeline = async (userUuidAndMessages: MultipleMessagesforTimelineRequest): Promise<Timeline | undefined> => {
+        return this.databaseConnection.addMultipleMessagesToTimeline(userUuidAndMessages);
     }
 
     public addMessageToMultipleTimelines = async (message_and_user_uuids: MessageForMultipleTimelinesRequest): Promise<Array<Timeline | undefined>> => {
